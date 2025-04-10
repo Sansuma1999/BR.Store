@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Profile</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #e9fbe5;
+      margin: 0;
+      padding: 2rem;
+      color: #333;
+    }
+
+    h1 {
+      color: #2e8b57;
+      text-align: center;
+    }
+
+    .container {
+      display: flex;
+      flex-direction: row;
+      gap: 2rem;
+      margin-top: 2rem;
+    }
+
+    .cart-section, .price-details {
+      background-color: #ffffff;
+      padding: 1.5rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .cart-section {
+      flex: 2;
+    }
+
+    .price-details {
+      flex: 1;
+      height: fit-content;
+    }
+
+    .cart-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 1rem;
+      padding: 1rem 0;
+      border-bottom: 1px solid #ccc;
+    }
+
+    .cart-item img {
+      width: 100px;
+      height: auto;
+      border-radius: 10px;
+    }
+
+    .cart-item-details {
+      flex-grow: 1;
+    }
+
+    .cart-actions button {
+      margin-right: 10px;
+      padding: 5px 10px;
+      background-color: #32cd32;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .cart-actions button:hover {
+      background-color: #228b22;
+    }
+
+    .quantity {
+      display: inline-block;
+      min-width: 30px;
+      text-align: center;
+    }
+
+    .price-details h3, .price-details p {
+      margin-bottom: 1rem;
+    }
+
+    .place-order {
+      background-color: orange;
+      color: white;
+      border: none;
+      padding: 10px;
+      width: 100%;
+      font-size: 1.2rem;
+      cursor: pointer;
+      border-radius: 8px;
+    }
+
+    .place-order:hover {
+      background-color: darkorange;
+    }
+  </style>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const updatePriceDetails = () => {
+        const cartItems = document.querySelectorAll('.cart-item');
+        let totalPrice = 0;
+        let totalItems = 0;
+        cartItems.forEach(item => {
+          const priceText = item.querySelector('p').textContent;
+          const quantity = parseInt(item.querySelector('.quantity').textContent);
+          const price = parseInt(priceText.replace(/[^\d]/g, ''));
+          totalPrice += price * quantity;
+          totalItems += quantity;
+        });
+        const discount = totalPrice >= 200 ? 20 : 0;
+        const finalAmount = totalPrice - discount;
+        document.querySelector('.price-details').innerHTML = `
+          <h3>PRICE DETAILS</h3>
+          <p>Price (${totalItems} items): ₹${totalPrice}</p>
+          <p>Discount: -₹${discount}</p>
+          <p>Delivery Charges: Free</p>
+          <p><strong>Total Amount: ₹${finalAmount}</strong></p>
+          <p style="color: green;">You will save ₹${discount} on this order</p>
+          <button class="place-order">PLACE ORDER</button>
+        `;
+      };
+
+      document.querySelectorAll('.cart-item').forEach(item => {
+        const minus = item.querySelector('.decrease');
+        const plus = item.querySelector('.increase');
+        const quantitySpan = item.querySelector('.quantity');
+        const removeBtn = item.querySelector('.remove');
+
+        minus.addEventListener('click', () => {
+          let qty = parseInt(quantitySpan.textContent);
+          if (qty > 1) {
+            quantitySpan.textContent = qty - 1;
+            updatePriceDetails();
+          }
+        });
+
+        plus.addEventListener('click', () => {
+          let qty = parseInt(quantitySpan.textContent);
+          if (qty < 20) {
+            quantitySpan.textContent = qty + 1;
+            updatePriceDetails();
+          }
+        });
+
+        removeBtn.addEventListener('click', () => {
+          item.remove();
+          updatePriceDetails();
+        });
+      });
+
+      updatePriceDetails();
+    });
+  </script>
+</head>
+<body>
+  <h1>My Profile</h1>
+
+  <div class="container">
+    <div class="cart-section">
+      <h2>My Cart</h2>
+      <div class="cart-item">
+        <img src="https://via.placeholder.com/100" alt="Product Image">
+        <div class="cart-item-details">
+          <h3>Mushroom Pack 1</h3>
+          <p>₹100</p>
+          <div class="cart-actions">
+            <button class="decrease">-</button>
+            <span class="quantity">1</span>
+            <button class="increase">+</button>
+            <button>Save for Later</button>
+            <button class="remove">Remove</button>
+          </div>
+        </div>
+      </div>
+      <div class="cart-item">
+        <img src="https://via.placeholder.com/100" alt="Product Image">
+        <div class="cart-item-details">
+          <h3>Mushroom Pack 2</h3>
+          <p>₹120</p>
+          <div class="cart-actions">
+            <button class="decrease">-</button>
+            <span class="quantity">1</span>
+            <button class="increase">+</button>
+            <button>Save for Later</button>
+            <button class="remove">Remove</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="price-details">
+      <!-- Content will be dynamically updated by JavaScript -->
+    </div>
+  </div>
+</body>
+</html>
